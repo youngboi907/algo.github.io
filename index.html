@@ -1,1 +1,80 @@
-hello
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binance BTC/USDT Open Interest</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .header {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .data {
+            font-size: 20px;
+            color: #333;
+            margin: 10px 0;
+        }
+        .error {
+            color: red;
+        }
+        .loading {
+            color: #3498db;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            Binance BTC/USDT Open Interest
+        </div>
+        <div id="loading" class="loading">
+            Loading data...
+        </div>
+        <div id="open-interest" class="data"></div>
+        <div id="error" class="error"></div>
+    </div>
+
+    <script>
+        async function fetchOpenInterest() {
+            const url = 'https://fapi.binance.com/fapi/v1/openInterest?symbol=BTCUSDT';
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data && data.openInterest) {
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('open-interest').innerText = `Open Interest: ${data.openInterest} BTC`;
+                } else {
+                    throw new Error('Open interest data is unavailable.');
+                }
+            } catch (error) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').innerText = `Error: ${error.message}`;
+            }
+        }
+
+        // Fetch data when the page loads
+        fetchOpenInterest();
+    </script>
+
+</body>
+</html>
